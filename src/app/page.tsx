@@ -42,9 +42,7 @@ export default function Home() {
       phone: "",
     },
   });
-
-  // const [paystackConfig, setPaystackConfig] = useState()
-
+  
   const handlePayment = (userInfo: z.infer<typeof schema>) => {
     const config: HookConfig = {
       email: userInfo.email,
@@ -86,7 +84,6 @@ export default function Home() {
             onSubmit={form.handleSubmit(handlePayment)}
             className="space-y-10 my-6 min-w-[250px]"
           >
-            {/* <div className="grid md:grid-cols-[1fr_1fr] gap-4 w-full"> */}
             <FormField
               control={form.control}
               name={"fullName"}
@@ -104,16 +101,6 @@ export default function Home() {
                 </FormItem>
               )}
             />
-
-            {/* <FormItem>
-                <FormControl>
-                  <Input
-                   "
-                  />
-                </FormControl>
-              </FormItem> */}
-            {/* </div> */}
-
             <FormField
               control={form.control}
               name={"phone"}
