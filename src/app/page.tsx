@@ -1,4 +1,6 @@
 "use client";
+import { usePaystackPayment } from "react-paystack";
+import { LockClosedIcon } from "@radix-ui/react-icons";
 import { z } from "zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -13,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import { HookConfig } from "react-paystack/dist/types";
 
 export default function Home() {
   const schema = z.object({
@@ -38,17 +41,39 @@ export default function Home() {
     },
   });
 
+  // const [paystackConfig, setPaystackConfig] = useState()
+
   const handlePayment = (userInfo: z.infer<typeof schema>) => {
-    console.log(userInfo);
+    const config: HookConfig = {
+      email: userInfo.email,
+      amount: parseFloat(userInfo.amount),
+      publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_TEST_KEY || "",
+      currency: "GHS",
+      phone: userInfo.phone,
+      metadata: {
+        custom_fields: [
+          {
+            display_name: "Payment from",
+            variable_name: "Full Name",
+            value: userInfo.fullName,
+          },
+        ],
+      },
+    };
+    const initializePayment = usePaystackPayment(config);
+    const onSuccess = () => {
+      console.log("paid");
+    };
+    initializePayment({ onSuccess });
   };
 
   return (
     <div className=" bg-neutral-50 dark:bg-blue-800 min-h-screen w-full flex items-center justify-center">
-      <div className=" py-8 px-4 md:p-8 my-10  flex flex-col justify-center  items-center rounded-xl shadow-lg shadow-gray-600 dark:bg-blue-950 w-[90vw] md:w-[60vw] min-h-[500px] ">
-        <h3 className="text-3xl text-center text-emerald-700 font-parisFont">
+      <div className=" py-8 px-4 md:p-8 my-10   items-center rounded-xl shadow-lg shadow-gray-600 dark:bg-blue-950 w-[90vw] md:w-[60vw] min-h-[500px] ">
+        <h3 className="text-3xl md:text-5xl text-center text-emerald-700 font-parisFont">
           Techsirl Photography
         </h3>
-        <h3 className="mt-2 text-sm text-center ">Payment page</h3>
+        <h3 className="mt-2 text-sm md:text-lg text-center ">Payment page</h3>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handlePayment)}
@@ -60,13 +85,15 @@ export default function Home() {
               name={"fullName"}
               render={({ field: { value, onChange } }) => (
                 <FormItem>
-                  <FormLabel className="text-lg text-neutral-500">
+                  <FormLabel className="text-lg  md:text-2xl text-neutral-500">
                     Full Name
                   </FormLabel>
                   <FormControl>
                     <Input value={value} onChange={onChange} />
                   </FormControl>
-                  {form.formState.errors?.fullName && <FormMessage />}
+                  {form.formState.errors?.fullName && (
+                    <FormMessage className="text-lg" />
+                  )}
                 </FormItem>
               )}
             />
@@ -85,13 +112,15 @@ export default function Home() {
               name={"phone"}
               render={({ field: { value, onChange } }) => (
                 <FormItem>
-                  <FormLabel className="text-lg text-neutral-500">
+                  <FormLabel className="text-lg md:text-2xl text-neutral-500">
                     Phone Number
                   </FormLabel>
                   <FormControl>
                     <Input value={value} onChange={onChange} />
                   </FormControl>
-                  {form.formState.errors?.phone && <FormMessage />}
+                  {form.formState.errors?.phone && (
+                    <FormMessage className="text-lg" />
+                  )}
                 </FormItem>
               )}
             />
@@ -101,13 +130,15 @@ export default function Home() {
               name={"email"}
               render={({ field: { value, onChange } }) => (
                 <FormItem>
-                  <FormLabel className="text-lg text-neutral-500">
+                  <FormLabel className="text-lg md:text-2xl text-neutral-500">
                     Email
                   </FormLabel>
                   <FormControl>
                     <Input value={value} onChange={onChange} />
                   </FormControl>
-                  {form.formState.errors?.email && <FormMessage />}
+                  {form.formState.errors?.email && (
+                    <FormMessage className="text-lg" />
+                  )}
                 </FormItem>
               )}
             />
@@ -117,7 +148,7 @@ export default function Home() {
               name={"amount"}
               render={({ field: { value, onChange } }) => (
                 <FormItem>
-                  <FormLabel className="text-lg text-neutral-500">
+                  <FormLabel className="text-lg md:text-2xl text-neutral-500">
                     Amount
                   </FormLabel>
                   <FormControl>
@@ -128,7 +159,9 @@ export default function Home() {
                       onChange={onChange}
                     />
                   </FormControl>
-                  {form.formState.errors?.amount && <FormMessage />}
+                  {form.formState.errors?.amount && (
+                    <FormMessage className="text-lg" />
+                  )}
                 </FormItem>
               )}
             />
@@ -137,23 +170,28 @@ export default function Home() {
               <FormItem>
                 <FormControl>
                   <Button
-                    size={"lg"}
-                    className="bg-blue-800 text-lg"
+                    className="bg-blue-800 p-6 text-lg font-semibold md:text-2xl md:px-16 md:h-20"
                     type="submit"
                   >
-                    Start Payment
+                    Process Payment
                   </Button>
                 </FormControl>
               </FormItem>
             </div>
           </form>
         </Form>
-        <h6 className="text-center text-slate-600">
-          All payments are secured with{" "}
-          <Link href="https://paystack.com/" className="text-blue-700">
-            Paystack
-          </Link>
-        </h6>
+        <div className="flex justify-center items-center">
+          <LockClosedIcon className="inline h-6 w-6 mr-2" />
+          <h6 className=" text-center text-slate-600 md:text-xl font-semibold">
+            Secured by{" "}
+            <Link
+              href="https://paystack.com/"
+              className="text-blue-700 font-semibold"
+            >
+              Paystack
+            </Link>
+          </h6>
+        </div>
       </div>
     </div>
   );
