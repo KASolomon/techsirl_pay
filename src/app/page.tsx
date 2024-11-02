@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { HookConfig } from "react-paystack/dist/types";
+import { SunMoonIcon } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export default function Home() {
   const schema = z.object({
@@ -67,13 +69,18 @@ export default function Home() {
     initializePayment({ onSuccess });
   };
 
+  const { setTheme, theme } = useTheme();
   return (
-    <div className=" bg-neutral-50 dark:bg-blue-800 min-h-screen w-full flex items-center justify-center">
-      <div className=" py-8 px-4 md:p-8 my-10   items-center rounded-xl shadow-lg shadow-gray-600 dark:bg-blue-950 w-[90vw] md:w-[60vw] min-h-[500px] ">
-        <h3 className="text-3xl md:text-5xl text-center text-emerald-700 font-parisFont">
+    <div className=" bg-neutral-50 dark:bg-neutral-900 min-h-screen w-full flex items-center justify-center">
+      <div className="fixed bottom-4 right-4 md:bottom-20 md:right-16 bg-neutral-200 dark:bg-slate-800 rounded-full p-2" onClick={()=>theme == 'dark'? setTheme('light') : setTheme('dark')}>
+        <SunMoonIcon size={40} strokeWidth={1} />
+      </div>
+
+      <div className=" py-8 px-4 md:p-8 my-10   items-center rounded-xl shadow-lg shadow-gray-600 dark:bg-transparent w-[90vw] md:w-[60vw] min-h-[500px] ">
+        <h3 className="text-3xl md:text-5xl text-center text-emerald-700 dark:text-emerald-500 font-parisFont">
           Techsirl Photography
         </h3>
-        <h3 className="mt-2 text-sm md:text-lg text-center ">Payment page</h3>
+        <h3 className="mt-2 text-md md:text-xl text-center ">Payment page</h3>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handlePayment)}
@@ -85,7 +92,7 @@ export default function Home() {
               name={"fullName"}
               render={({ field: { value, onChange } }) => (
                 <FormItem>
-                  <FormLabel className="text-lg  md:text-2xl text-neutral-500">
+                  <FormLabel className="text-lg  md:text-2xl text-neutral-500  dark:text-neutral-100">
                     Full Name
                   </FormLabel>
                   <FormControl>
@@ -112,7 +119,7 @@ export default function Home() {
               name={"phone"}
               render={({ field: { value, onChange } }) => (
                 <FormItem>
-                  <FormLabel className="text-lg md:text-2xl text-neutral-500">
+                  <FormLabel className="text-lg md:text-2xl text-neutral-500 dark:text-neutral-100">
                     Phone Number
                   </FormLabel>
                   <FormControl>
@@ -130,7 +137,7 @@ export default function Home() {
               name={"email"}
               render={({ field: { value, onChange } }) => (
                 <FormItem>
-                  <FormLabel className="text-lg md:text-2xl text-neutral-500">
+                  <FormLabel className="text-lg md:text-2xl text-neutral-500 dark:text-neutral-100">
                     Email
                   </FormLabel>
                   <FormControl>
@@ -148,7 +155,7 @@ export default function Home() {
               name={"amount"}
               render={({ field: { value, onChange } }) => (
                 <FormItem>
-                  <FormLabel className="text-lg md:text-2xl text-neutral-500">
+                  <FormLabel className="text-lg md:text-2xl text-neutral-500 dark:text-neutral-100">
                     Amount
                   </FormLabel>
                   <FormControl>
