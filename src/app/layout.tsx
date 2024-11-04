@@ -16,11 +16,11 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Complete Order",
+  title: "Techsirl Pay",
   description: "Techsirl payment page",
 };
 
-export const parisFont = Parisienne({
+const parisFont = Parisienne({
   subsets: ["latin"],
   weight: "400",
   style: "normal",
@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${parisFont.variable} antialiased`}
       >
